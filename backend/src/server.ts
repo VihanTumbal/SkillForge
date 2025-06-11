@@ -39,17 +39,43 @@ connectToDatabase();
 app.use(helmet());
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL || "http://localhost:3000",
-      "http://localhost:3001",
-      "https://skill-forge-frontend-chi.vercel.app",
-      "https://skill-forge-frontend-zlvh.vercel.app", // Add backend URL for testing
-    ],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, curl, etc.)
+      if (!origin) return callback(null, true);
+      
+      const allowedOrigins = [
+        process.env.FRONTEND_URL || "http://localhost:3000",
+        "http://localhost:3001",
+        "https://skill-forge-frontend-chi.vercel.app",
+        "https://skill-forge-frontend-zlvh.vercel.app",
+      ];
+      
+      // Allow any Vercel deployment URL for this project
+      const isVercelUrl = origin.includes('skill-forge-frontend') && origin.includes('.vercel.app');
+      const isAllowed = allowedOrigins.includes(origin) || isVercelUrl;
+      
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        console.log('CORS blocked origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    optionsSuccessStatus: 200, // For legacy browser support
   })
 );;
+
+// Explicit OPTIONS handler for all routes to prevent redirects
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
 
 // Rate limiting
 const limiter = rateLimit({

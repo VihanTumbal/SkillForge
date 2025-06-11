@@ -4,6 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ||
     ? 'https://skill-forge-frontend-zlvh.vercel.app' 
     : 'http://localhost:5001');
 
+console.log('Environment:', process.env.NODE_ENV);
 console.log('API_BASE_URL:', API_BASE_URL); // Debug log
 
 // interface ApiResponse<T> {
@@ -26,15 +27,20 @@ export class ApiError extends Error {
 
 class ApiClient {
   private baseUrl: string;
-
   constructor(baseUrl: string = API_BASE_URL) {
-    this.baseUrl = baseUrl;
+    // Remove trailing slash to prevent double slashes in URLs
+    this.baseUrl = baseUrl.replace(/\/$/, '');
   }
+  
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    // Ensure endpoint starts with / for proper URL construction
+    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = `${this.baseUrl}${normalizedEndpoint}`;
+    
+    console.log('Full API URL:', url); // Debug log
 
     // Always get token directly from localStorage for each request
     const token =
