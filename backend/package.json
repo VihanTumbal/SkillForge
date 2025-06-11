@@ -6,6 +6,7 @@
     "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
     "build": "tsc",
+    "vercel-build": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -41,5 +42,8 @@
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
