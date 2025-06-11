@@ -82,17 +82,10 @@ app.get("/api/health", (req, res) => {
 app.use(errorHandler);
 
 // 404 handler
-app.use("*", (req, res) => {
-  res.status(404).json({
+app.use("*", (req, res) => {  res.status(404).json({
     status: "error",
     message: "Route not found",
   });
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 SkillForge API server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);  
-  console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
 });
 
 // Export app for Vercel serverless
