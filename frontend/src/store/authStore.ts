@@ -60,8 +60,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       });
     } catch (error) {
       set({
-        error:
-          error instanceof Error ? error.message : "Registration failed",
+        error: error instanceof Error ? error.message : "Registration failed",
         isLoading: false,
         isAuthenticated: false,
         user: null,
@@ -110,7 +109,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     if (typeof window === "undefined") {
       return;
     }
-    
+
     // Simply check if token exists in localStorage
     const token = AuthService.getToken();
     if (token) {

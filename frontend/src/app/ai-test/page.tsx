@@ -1,24 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { useAuthStore } from "@/store/authStore";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
 interface AIResponse {
   status: string;
-  data: any;
+  data: unknown;
+  message?: string;
+}
+
+interface RequestBody {
+  targetRole?: string;
+  [key: string]: unknown;
 }
 
 export default function AITestPage() {
   const [loading, setLoading] = useState(false);
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Record<string, AIResponse>>({});
   const [targetRole, setTargetRole] = useState("Full Stack Developer");
-  const { isAuthenticated } = useAuthStore();
 
   const callAIEndpoint = async (
     endpoint: string,
     method: string = "GET",
-    body?: any
+    body?: RequestBody
   ) => {
     setLoading(true);
     try {
@@ -42,12 +46,15 @@ export default function AITestPage() {
       );
 
       const data: AIResponse = await response.json();
-      setResponses((prev) => ({ ...prev, [endpoint]: data }));
-    } catch (error) {
+      setResponses((prev) => ({ ...prev, [endpoint]: data }));    } catch (error) {
       console.error(`Error calling ${endpoint}:`, error);
       setResponses((prev) => ({
         ...prev,
-        [endpoint]: { status: "error", message: "Failed to call API" },
+        [endpoint]: { 
+          status: "error", 
+          message: "Failed to call API",
+          data: null
+        },
       }));
     } finally {
       setLoading(false);

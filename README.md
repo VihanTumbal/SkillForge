@@ -7,7 +7,7 @@ A modern full-stack application that helps developers track their skills, set le
 ## 🛠️ Tech Stack
 
 - **Frontend**: Next.js 14, TypeScript, TailwindCSS
-- **Backend**: Node.js, Express.js, TypeScript  
+- **Backend**: Node.js, Express.js, TypeScript
 - **Database**: MongoDB
 - **AI**: Google Gemini API
 - **Auth**: JWT
@@ -15,6 +15,7 @@ A modern full-stack application that helps developers track their skills, set le
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 20+
 - MongoDB
 - Google AI API Key
@@ -22,6 +23,7 @@ A modern full-stack application that helps developers track their skills, set le
 ### Setup
 
 1. **Clone and install:**
+
 ```bash
 git clone <repo-url>
 cd SkillForge
@@ -29,6 +31,7 @@ npm install
 ```
 
 2. **Backend setup:**
+
 ```bash
 cd backend
 cp .env.example .env
@@ -37,12 +40,14 @@ npm run dev
 ```
 
 3. **Frontend setup:**
+
 ```bash
-cd frontend  
+cd frontend
 npm run dev
 ```
 
 4. **Access:**
+
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5001
 
