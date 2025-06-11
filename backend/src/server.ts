@@ -25,15 +25,27 @@ async function connectToDatabase() {
   
   try {
     cachedConnection = await connectDB();
+    console.log('✅ Database connection established');
     return cachedConnection;
   } catch (error) {
-    console.error('Database connection error:', error);
+    console.error('❌ Database connection error:', error);
     throw error;
   }
 }
 
-// Initialize database connection
-connectToDatabase();
+// Middleware to ensure database connection before processing requests
+app.use(async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'Database connection failed' 
+    });
+  }
+});
 
 // Security middleware
 app.use(helmet());
@@ -91,6 +103,22 @@ app.use(express.urlencoded({ extended: true }));
 
 // Logging middleware
 app.use(morgan("combined"));
+
+// Environment validation middleware
+app.use('/api', (req, res, next) => {
+  const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET'];
+  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+  
+  if (missingVars.length > 0) {
+    console.error('❌ Missing environment variables:', missingVars);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Server configuration error'
+    });
+  }
+  
+  next();
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
