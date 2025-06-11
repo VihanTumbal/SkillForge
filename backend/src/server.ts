@@ -43,8 +43,11 @@ app.use(
       process.env.FRONTEND_URL || "http://localhost:3000",
       "http://localhost:3001",
       "https://skill-forge-frontend-chi.vercel.app",
+      "https://skill-forge-frontend-zlvh.vercel.app", // Add backend URL for testing
     ],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );;
 
